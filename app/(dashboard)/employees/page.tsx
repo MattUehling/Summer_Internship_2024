@@ -1,106 +1,79 @@
 'use client'
-import { Avatar, Badge, Table, Group, Text, Select } from '@mantine/core';
-import { Button } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Table, Group, Text, Select, Button, TextInput } from '@mantine/core';
 import Link from 'next/link';
-const data = [
-  {
-    avatar:
-      'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png',
-    name: 'Robert Wolfkisser',
-    job: 'Engineer',
-    email: 'rob_wolf@gmail.com',
-    role: 'Collaborator',
-    lastActive: '2 days ago',
-    active: true,
-  },
-  {
-    avatar:
-      'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-6.png',
-    name: 'Jill Jailbreaker',
-    job: 'Engineer',
-    email: 'jj@breaker.com',
-    role: 'Collaborator',
-    lastActive: '6 days ago',
-    active: true,
-  },
-  {
-    avatar:
-      'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png',
-    name: 'Henry Silkeater',
-    job: 'Designer',
-    email: 'henry@silkeater.io',
-    role: 'Contractor',
-    lastActive: '2 days ago',
-    active: false,
-  },
-  {
-    avatar:
-      'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png',
-    name: 'Bill Horsefighter',
-    job: 'Designer',
-    email: 'bhorsefighter@gmail.com',
-    role: 'Contractor',
-    lastActive: '5 days ago',
-    active: true,
-  },
-  {
-    avatar:
-      'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png',
-    name: 'Jeremy Footviewer',
-    job: 'Manager',
-    email: 'jeremy@foot.dev',
-    role: 'Manager',
-    lastActive: '3 days ago',
-    active: false,
-  },
-];
 
-const rolesData = ['Manager', 'Collaborator', 'Contractor'];
+const rolesData = ['CNA', 'Doctor', 'Manager'];
 
-export default function UsersRolesTable() {
-  const rows = data.map((item) => (
-    <Table.Tr key={item.name}>
+const UsersRolesTable = () => {
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async () => {
+    setLoading(true);
+    console.log('Clicked')
+    try {
+      // const response = await fetch('/api/employees?userId=${userId}', {
+      const response = await fetch('/api/employees', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const users = await response.json();
+      console.log(users)
+      setEmployees(users);
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while fetching data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const rows = employees.map((employee) => (
+    <Table.Tr key={employee.id}>
       <Table.Td>
         <Group gap="sm">
-          <Avatar size={40} src={item.avatar} radius={40} />
+          <Avatar size={40} src={employee.avatar} radius={40} />
           <div>
             <Text fz="sm" fw={500}>
-              {item.name}
+              {employee.name}
             </Text>
             <Text fz="xs" c="dimmed">
-              {item.email}
+              {employee.email}
             </Text>
           </div>
         </Group>
       </Table.Td>
-
       <Table.Td>
         <Select
           data={rolesData}
-          defaultValue={item.role}
+          defaultValue={employee.job}
           variant="unstyled"
           allowDeselect={false}
         />
       </Table.Td>
-      <Table.Td>{item.lastActive}</Table.Td>
+      <Table.Td>{employee.lastsubmission}</Table.Td>
       <Table.Td>
-        <Button component={Link} href = "/dropImages">Time Sheet</Button>
-       
-        {/* {item.active ? (
-          <Badge fullWidth variant="light">
-            Active
-          </Badge>
-        ) : (
-          <Badge color="gray" fullWidth variant="light">
-            Disabled
-          </Badge>
-        )} */}
+        <Button component={Link} href="/dropImages">
+          Submit Image
+        </Button>
+      </Table.Td>
+      <Table.Td>
+      <Button component={Link} href="/Timesheet">
+          Timesheet
+        </Button>
       </Table.Td>
     </Table.Tr>
   ));
 
   return (
-    <Table.ScrollContainer minWidth={800}>
+    <><Button onClick={handleSubmit}>Load</Button><Table.ScrollContainer minWidth={800}>
       <Table verticalSpacing="sm">
         <Table.Thead>
           <Table.Tr>
@@ -108,10 +81,13 @@ export default function UsersRolesTable() {
             <Table.Th>Title</Table.Th>
             <Table.Th>Last Submission</Table.Th>
             <Table.Th>Submit</Table.Th>
+            <Table.Th>TimeSheet</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
-    </Table.ScrollContainer>
+    </Table.ScrollContainer></>
   );
-}
+};
+
+export default UsersRolesTable;

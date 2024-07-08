@@ -1,9 +1,22 @@
-'use client'
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Avatar, Text, Group } from '@mantine/core';
 import { IconPhoneCall, IconAt } from '@tabler/icons-react';
 import classes from './UserInfoIcons.module.css';
 
 export default function UserInfoIcons() {
+  const [user, setUser] = useState({ name: '' });
+
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const userObj = JSON.parse(userString);
+      console.log('Retrieved user from localStorage:', userObj); // Debug log
+      setUser(userObj);
+    }
+  }, []);
+
   return (
     <div>
       <Group wrap="nowrap">
@@ -14,24 +27,24 @@ export default function UserInfoIcons() {
         />
         <div>
           <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-            Software engineer
+            HR PERSON I'M GUESSING
           </Text>
 
           <Text fz="lg" fw={500} className={classes.name}>
-            Robert Glassbreaker
+            {user.name}
           </Text>
 
           <Group wrap="nowrap" gap={10} mt={3}>
             <IconAt stroke={1.5} size="1rem" className={classes.icon} />
             <Text fz="xs" c="dimmed">
-              robert@glassbreaker.io
+              {user.email}
             </Text>
           </Group>
 
           <Group wrap="nowrap" gap={10} mt={5}>
             <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
             <Text fz="xs" c="dimmed">
-              +11 (876) 890 56 23
+              {user.id}
             </Text>
           </Group>
         </div>

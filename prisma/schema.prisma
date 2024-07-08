@@ -8,7 +8,50 @@ datasource db {
 }
 
 model user {
-  id       Int    @id @default(autoincrement())
-  email    String @db.VarChar(255)
-  password String @db.VarChar(255)
+  id       Int        @id @default(autoincrement())
+  email    String     @db.VarChar(255)
+  name     String     @db.VarChar(255)
+  password String     @db.VarChar(255)
+  employee employee[]
+}
+
+model employee {
+  id             Int         @id @default(autoincrement())
+  userId         Int
+  name           String      @db.VarChar(255)
+  job            String      @db.VarChar(255)
+  email          String      @db.VarChar(255)
+  lastsubmission Int?
+  user           user        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
+  timesheet      timesheet[]
+
+  @@index([userId], map: "userId")
+}
+
+model week {
+  id             Int       @id @default(autoincrement())
+  timesheetId    Int
+  monday         Int?
+  tuesday        Int?
+  wednesday      Int?
+  thursday       Int?
+  friday         Int?
+  saturday       Int?
+  sunday         Int?
+  startDate      String?   @db.VarChar(255)
+  endDate        String?   @db.VarChar(255)
+  hoursWorked    Int?
+  submissionDate String?   @db.VarChar(255)
+  timesheet      timesheet @relation(fields: [timesheetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "week_ibfk_1")
+
+  @@index([timesheetId], map: "timesheetId")
+}
+
+model timesheet {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  employee   employee @relation(fields: [employeeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timesheet_ibfk_1")
+  week       week[]
+
+  @@index([employeeId], map: "employeeId")
 }
