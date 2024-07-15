@@ -1,71 +1,77 @@
-'use client'
+'use client';
+import React, { useEffect, useState } from 'react';
 import { Table, Progress, Anchor, Text, Group } from '@mantine/core';
 import classes from './tableDesign.module.css';
 import Link from 'next/link';
 
-const data = [
-  {
-    startDate: '2024-06-01',
-    endDate:'2024-06-07',
-    hoursWorked: 8,
-    submissionDate: '2024-06-07',
-  },
-  {
-    startDate: '2024-06-08',
-    endDate:'2024-06-15',
-    hoursWorked: 8,
-    submissionDate: '2024-06-16',
-  },
-  {
-    startDate: '2024-06-016',
-    endDate:'2024-06-23',
-    hoursWorked: 8,
-    submissionDate: '2024-06-23',
-  },
-  {
-    startDate: '2024-06-24',
-    endDate:'2024-06-31',
-    hoursWorked: 8,
-    submissionDate: '2024-07-01',
-  },
-  {
-    startDate: '2024-07-01',
-    endDate:'2024-07-07',
-    hoursWorked: 8,
-    submissionDate: '2024-07-07',
-  },
-];
+const TimesheetTable = () => {
+  const [timesheet, setTimesheet] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-export default function Timesheet() {
-  const rows = data.map((row, index) => {
-    return (
-      <Table.Tr key={index}>
-        <Table.Td>{row.startDate}</Table.Td>
-        <Table.Td>{row.endDate}</Table.Td>
-        <Table.Td>{row.hoursWorked}</Table.Td>
-        <Table.Td>{row.submissionDate}</Table.Td>
-        <Table.Td>
-            <Link href='./inDepth'>In-depth</Link>
-        </Table.Td>
-      </Table.Tr>
-    );
-  });
+  const handleSubmit = async () => {
+    setLoading(true);
+    console.log('Clicked');
+    try {
+      const response = await fetch('/api/timesheet', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setTimesheet(data);
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while fetching data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSubmit();
+  }, []);
+
+  const rows = timesheet.map((row, index) => (
+    <tr key={index}>
+      <td>{row.startDate}</td>
+      <td>{row.endDate}</td>
+      <td>{row.hoursWorked}</td>
+      <td>{row.submissionDate}</td>
+      <td>
+        <Link href='./inDepth'>In-depth</Link>
+      </td>
+    </tr>
+  ));
 
   return (
-    <Table.ScrollContainer minWidth={800}>
-      <Table verticalSpacing="xs">
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Start Date</Table.Th>
-            <Table.Th>End Date</Table.Th>
-            <Table.Th>Hours Worked</Table.Th>
-            <Table.Th>Submission Date</Table.Th>
-            <Table.Th>In-depth</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+    <>
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <Table.ScrollContainer minWidth={800}>
+          <Table verticalSpacing="xs">
+            <thead>
+              <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Hours Worked</th>
+                <th>Submission Date</th>
+                <th>In-depth</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </Table>
+        </Table.ScrollContainer>
+      )}
+    </>
   );
-}
+};
+
+export default TimesheetTable;

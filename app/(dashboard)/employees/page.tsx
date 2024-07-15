@@ -1,6 +1,6 @@
-'use client'
-import React, { useEffect, useState } from 'react';
-import { Avatar, Table, Group, Text, Select, Button, TextInput } from '@mantine/core';
+'use client';
+import React, { useState } from 'react';
+import { Avatar, Table, Group, Text, Select, Button } from '@mantine/core';
 import Link from 'next/link';
 
 const rolesData = ['CNA', 'Doctor', 'Manager'];
@@ -8,12 +8,21 @@ const rolesData = ['CNA', 'Doctor', 'Manager'];
 const UsersRolesTable = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
     setLoading(true);
-    console.log('Clicked')
+    console.log('Clicked');
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    if (!userInfo || !userInfo.id) {
+      console.log('User ID not found in localStorage');
+      alert('User ID not found. Please log in again.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // const response = await fetch('/api/employees?userId=${userId}', {
-      const response = await fetch('/api/employees', {
+      const response = await fetch(`/api/employees?userId=${userInfo.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +34,7 @@ const UsersRolesTable = () => {
       }
 
       const users = await response.json();
-      console.log(users)
+      console.log(users);
       setEmployees(users);
     } catch (error) {
       console.error(error);
@@ -35,9 +44,13 @@ const UsersRolesTable = () => {
     }
   };
 
+  const saveInfo = (values) => {
+    localStorage.setItem("timetable", JSON.stringify(values));
+  };
+
   const rows = employees.map((employee) => (
-    <Table.Tr key={employee.id}>
-      <Table.Td>
+    <tr key={employee.id}>
+      <td>
         <Group gap="sm">
           <Avatar size={40} src={employee.avatar} radius={40} />
           <div>
@@ -49,44 +62,52 @@ const UsersRolesTable = () => {
             </Text>
           </div>
         </Group>
-      </Table.Td>
-      <Table.Td>
+      </td>
+      <td>
         <Select
           data={rolesData}
           defaultValue={employee.job}
           variant="unstyled"
           allowDeselect={false}
         />
-      </Table.Td>
-      <Table.Td>{employee.lastsubmission}</Table.Td>
-      <Table.Td>
+      </td>
+      <td>{employee.lastsubmission}</td>
+      <td>
         <Button component={Link} href="/dropImages">
           Submit Image
         </Button>
-      </Table.Td>
-      <Table.Td>
-      <Button component={Link} href="/Timesheet">
+      </td>
+      <td>
+        <Button
+          component={Link}
+          onClick={() => saveInfo(employee.TimeSheet)}
+          href="/Timesheet"
+        >
           Timesheet
         </Button>
-      </Table.Td>
-    </Table.Tr>
+      </td>
+    </tr>
   ));
 
   return (
-    <><Button onClick={handleSubmit}>Load</Button><Table.ScrollContainer minWidth={800}>
-      <Table verticalSpacing="sm">
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Employee</Table.Th>
-            <Table.Th>Title</Table.Th>
-            <Table.Th>Last Submission</Table.Th>
-            <Table.Th>Submit</Table.Th>
-            <Table.Th>TimeSheet</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer></>
+    <>
+      <Button onClick={handleSubmit}>Load</Button>
+      <Table.ScrollContainer minWidth={800}>
+        <Button>Add employee- fix later</Button>
+        <Table verticalSpacing="sm">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Title</th>
+              <th>Last Submission</th>
+              <th>Submit</th>
+              <th>TimeSheet</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </Table.ScrollContainer>
+    </>
   );
 };
 

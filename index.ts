@@ -1,44 +1,49 @@
 const { PrismaClient } = require('@prisma/client');
+const { LocalStorage } = require('node-localstorage');
 
 const prisma = new PrismaClient();
+// const { LocalStorage } = require('node-localstorage');
+// const localStorages = new LocalStorage('./scratch'); // You can specify the directory where you want to store the data
+// localStorages.setItem("id", '3');
+    // let id = localStorages.getItem("id");
+
+    // const employees = await prisma.employee.findMany({
+    //   where: {
+    //     userId: parseInt('3', 10),
+    //   },
+    //   select: {
+    //     id: true,
+    //     userId: true,
+    //     user: true,
+    //     timesheet: true,
+    //     _count: true,
+    //     name: true,
+    //     job: true,
+    //     email: true,
+    //     lastsubmission: true,
 
 async function main() {
-  // await prisma.user.create({
-  //   data:{
-  //   email:"Joe@gmail.com",
-  //   password:"Password",
-  //   name:"Josh1"
-  //   },
-  // });
-  // const allUsers = await prisma.user.findMany()
-  // console.log(allUsers)
-
   try {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      const userObj = JSON.parse(userString);
-      console.log(userObj.id)
-    }
-        const employees = await prisma.employee.findMany({
-          where: {
-            userId: parseInt('3', 10),
-    
-          },
-          select: {
-            id: true,
-            userId: true,
-            user: true,
-            timesheet: true,
-           _count: true,
-            name: true,
-            job: true,
-            email: true,
-            lastsubmission: true,
-          },
-        });
-  console.log(employees)
+    const timesheet = await prisma.week.findMany({where:{
+      id:34,
+    },
+      select:{
+        timesheetId: true,
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: true,
+        sunday: true,
+        startDate: true,
+        endDate: true,
+        hoursWorked: true,
+        submissionDate: true,
+      }});
+    console.log(timesheet);
   } catch (error) {
-        console.error('Error fetching employees:', error);
+    console.error('Error fetching employees:', error);
   }
 }
 
@@ -48,4 +53,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-});
+  });

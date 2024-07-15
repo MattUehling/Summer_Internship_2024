@@ -91,7 +91,7 @@ function Demo() {
         throw new Error('Failed to fetch data');
       }
 
-      const users = await response.json();
+      const user = await response.json();
 
       if (user) {
         // Save user to localStorage

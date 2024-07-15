@@ -1,26 +1,38 @@
-// pages/api/employees.js
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function GET(req, res) {
   try {
-    const employees = await prisma.employee.findMany({
-      // where: {
-      //   userId: parseInt('1', 10),
-      // },
-          select: {
-            id: true,
-            userId: true,
-            user: true,
-          //   timetable: true,
-          //  _count: true,
-            name: true,
-            job: true,
-            email: true,
-            lastsubmission: true, 
-          },
+    const { searchParams } = new URL(req.url);
+    const userId = parseInt(searchParams.get('userId'), 10);
+
+    if (!userId) {
+      return new Response(JSON.stringify({ error: 'User ID is required' }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+    }
+
+    const employees = await prisma.employee.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        userId: true,
+        user: true,
+        timesheet: true,
+        _count: true,
+        name: true,
+        job: true,
+        email: true,
+        // lastsubmission: true,
+      },
+    });
+
     return new Response(JSON.stringify(employees), {
       status: 200,
       headers: {
@@ -39,4 +51,3 @@ export async function GET(req, res) {
     await prisma.$disconnect();
   }
 }
-
