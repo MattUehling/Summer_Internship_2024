@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const { LocalStorage } = require('node-localstorage');
+// const { LocalStorage } = require('node-localstorage');
 
 const prisma = new PrismaClient();
 // const { LocalStorage } = require('node-localstorage');
@@ -21,26 +21,43 @@ const prisma = new PrismaClient();
     //     job: true,
     //     email: true,
     //     lastsubmission: true,
+    // const timesheet = await prisma.week.findMany({where:{
+    //   employeeId:25,
+    // },
+    //   select:{
+    //     timesheetId: true,
+    //     monday: true,
+    //     tuesday: true,
+    //     wednesday: true,
+    //     thursday: true,
+    //     friday: true,
+    //     saturday: true,
+    //     sunday: true,
+    //     startDate: true,
+    //     endDate: true,
+    //     hoursWorked: true,
+    //     submissionDate: true,
+    //   }});
 
 async function main() {
   try {
-    const timesheet = await prisma.week.findMany({where:{
-      id:34,
-    },
-      select:{
-        timesheetId: true,
-        monday: true,
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
-        saturday: true,
-        sunday: true,
-        startDate: true,
-        endDate: true,
-        hoursWorked: true,
-        submissionDate: true,
-      }});
+    const timesheet = await prisma.timesheet.findMany({
+      where: {
+        employeeId: 25,
+      },
+      select: {
+        // id: true,
+        // employeeId: true,
+        week: {
+          select: {
+            id: true,
+            startDate: true,
+            endDate: true,
+            hoursWorked: true,
+          },
+        },
+      },
+    });
     console.log(timesheet);
   } catch (error) {
     console.error('Error fetching employees:', error);

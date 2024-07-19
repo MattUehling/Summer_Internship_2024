@@ -44,8 +44,10 @@ const UsersRolesTable = () => {
     }
   };
 
-  const saveInfo = (values) => {
-    localStorage.setItem("timetable", JSON.stringify(values));
+  const saveInfo = (employee) => {
+    localStorage.setItem("employee", JSON.stringify(employee));
+    const savedEmployee = JSON.parse(localStorage.getItem("employee"));
+    console.log(savedEmployee);
   };
 
   const rows = employees.map((employee) => (
@@ -79,8 +81,8 @@ const UsersRolesTable = () => {
       </td>
       <td>
         <Button
+          onClick={() => saveInfo(employee)}
           component={Link}
-          onClick={() => saveInfo(employee.TimeSheet)}
           href="/Timesheet"
         >
           Timesheet

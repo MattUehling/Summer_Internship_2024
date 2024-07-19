@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 export async function GET(req, res) {
   try {
     const { searchParams } = new URL(req.url);
-    const employeeId = parseInt(searchParams.get('employeeId'), 10);
+    const weekId = parseInt(searchParams.get('weekId'), 10);
 
-    if (!employeeId) {
-      return new Response(JSON.stringify({ error: 'Employee ID is required' }), {
+    if (!weekId) {
+      return new Response(JSON.stringify({ error: 'week ID is required' }), {
         status: 400,
         headers: {
           "Content-Type": "application/json",
@@ -16,21 +16,23 @@ export async function GET(req, res) {
       });
     }
 
-    const timesheet = await prisma.timesheet.findMany({
+    const timesheet = await prisma.week.findMany({
       where: {
-        employeeId: employeeId,
+        id: weekId,
       },
       select: {
-        id: true,
-        week: {
-          select: {
-            id: true,
-            startDate: true,
-            endDate: true,
-            hoursWorked: true,
-            submissionDate: true,
-          },
-        },
+        timesheetId: true,
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: true,
+        sunday: true,
+        startDate: true,
+        endDate: true,
+        hoursWorked: true,
+        submissionDate: true,
       },
     });
 
@@ -41,8 +43,8 @@ export async function GET(req, res) {
       },
     });
   } catch (error) {
-    console.error("Error during fetching timesheet:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
+    console.error('Error during fetching week data:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: {
         "Content-Type": "application/json",

@@ -1,5 +1,6 @@
-"use client"
-import { Table } from '@mantine/core';
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Table, Text } from '@mantine/core';
 import { Line } from 'react-chartjs-2';
 import Link from 'next/link';
 import {
@@ -10,7 +11,7 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 
 ChartJS.register(
@@ -23,62 +24,6 @@ ChartJS.register(
   Legend
 );
 
-const data = [
-  {
-    date: 'Monday',
-    hoursWorked: 14,
-    submissionDate: '2024-06-01',
-    rate: 2,
-    total: 0,
-  },
-  {
-    date: 'Tuesday',
-    hoursWorked: 5,
-    submissionDate: '2024-06-02',
-    rate: 2,
-    total: 0,
-  },
-  {
-    date: 'Wednesday',
-    hoursWorked: 9,
-    submissionDate: '2024-06-03',
-    rate: 2,
-    total: 0,
-  },
-  {
-    date: 'Thursday',
-    hoursWorked: 0,
-    submissionDate: '2024-06-04',
-    rate: 2,
-    total: 0,
-  },
-  {
-    date: 'Friday',
-    hoursWorked: 8,
-    submissionDate: '2024-06-05',
-    rate: 2,
-    total: 0,
-  },
-  {
-    date: 'Saturday',
-    hoursWorked: 7,
-    submissionDate: '2024-06-06',
-    rate: 15.63,
-    total: 0,
-  },
-  {
-    date: 'Sunday',
-    hoursWorked: 8,
-    submissionDate: '2024-06-07',
-    rate: 17.5,
-    total: 0,
-  },
-];
-
-data.forEach((item) => {
-  item.total = item.rate * item.hoursWorked;
-});
-
 const chartOptions = {
   scales: {
     y: {
@@ -87,53 +32,110 @@ const chartOptions = {
   },
 };
 
-const chartData = {
-  labels: data.map((item) => item.date),
-  datasets: [
-    {
-      label: 'Hours Worked',
-      data: data.map((item) => item.hoursWorked),
-      fill: false,
-      borderColor: 'rgb(75, 192, 192)',
-      tension: 0.5,
-    },
-  ],
-};
+const IndeptTable = () => {
+  const [indepth, setIndepth] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-export default function Timesheet() {
-  const rows = data.map((row, index) => {
-    return (
-      <Table.Tr key={index}>
-        <Table.Td>{row.date}</Table.Td>
-        <Table.Td>{row.hoursWorked}</Table.Td>
-        <Table.Td>{row.submissionDate}</Table.Td>
-        <Table.Td>
-          <Link href="/inDepth">In-depth</Link>
-        </Table.Td>
-        <Table.Td>{row.rate}</Table.Td>
-        <Table.Td>{row.total}</Table.Td>
-      </Table.Tr>
-    );
-  });
+  const handleSubmit = async () => {
+    const weekInfo = JSON.parse(localStorage.getItem("week"));
+    if (!weekInfo || !weekInfo.id) {
+      console.log('Week ID not found in localStorage');
+      alert('Week ID not found. Please log in again.');
+      return;
+    }
+    console.log(weekInfo.id);
+    setLoading(true);
+    console.log('Clicked');
+    try {
+      const response = await fetch(`/api/in-depth?weekId=${weekInfo.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setIndepth(data);
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while fetching data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSubmit();
+  }, []);
+
+  const transformDataToRows = (data) => {
+    return data.flatMap((week) => {
+      const startDate = new Date(week.startDate);
+      const days = [
+        { day: 'Monday', date: new Date(startDate).toISOString().split('T')[0], hoursWorked: week.monday },
+        { day: 'Tuesday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.tuesday },
+        { day: 'Wednesday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.wednesday },
+        { day: 'Thursday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.thursday },
+        { day: 'Friday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.friday },
+        { day: 'Saturday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.saturday },
+        { day: 'Sunday', date: new Date(startDate.setDate(startDate.getDate() + 1)).toISOString().split('T')[0], hoursWorked: week.sunday },
+      ];
+
+      return days;
+    });
+  };
+
+  const transformedData = transformDataToRows(indepth);
+
+  const chartData = {
+    labels: transformedData.map((item) => item.date),
+    datasets: [
+      {
+        label: 'Hours Worked',
+        data: transformedData.map((item) => item.hoursWorked),
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.5,
+      },
+    ],
+  };
+
+  const rows = transformedData.map((row, index) => (
+    <tr key={index}>
+      <td>{row.day}</td>
+      <td>{row.date}</td>
+      <td>{row.hoursWorked}</td>
+    </tr>
+  ));
 
   return (
     <div>
-      <Table.ScrollContainer minWidth={800}>
-        <Table verticalSpacing="xs">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Date</Table.Th>
-              <Table.Th>Hours Worked</Table.Th>
-              <Table.Th>Submission Date</Table.Th>
-              <Table.Th>In-depth</Table.Th>
-              <Table.Th>Rate</Table.Th>
-              <Table.Th>Total</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
-      <Line data={chartData} options={chartOptions} />
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <>
+          <Table.ScrollContainer minWidth={800}>
+            <Table verticalSpacing="xs">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Date</th>
+                  <th>Hours Worked</th>
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
+            </Table>
+          </Table.ScrollContainer>
+          <Line data={chartData} options={chartOptions} />
+        </>
+      )}
     </div>
   );
-}
+};
+
+export default IndeptTable;
