@@ -55,31 +55,50 @@ const prisma = new PrismaClient();
     //   },
     // });
     // console.log(timesheet);
-
-async function main() {
-  let name = 'Josh Uehling'
-  let job = 'CNA'
-  let email = "email@email.com"
-  let userId= 5
+// let name = 'Josh Uehling'
+  // let job = 'CNA'
+  // let email = "email@email.com"
+  // let userId= 5
   
+  // try {
+  //   // const user = await prisma.user.findUnique({
+  //   //   where: { id: userId },
+  //   // });
+  //   // const newEmployee = await prisma.employee.create({
+  //   //   data: {
+  //   //     name,
+  //   //     job,
+  //   //     email,
+  //   //     userId: userId,
+  //     },
+  //   });
+  //   const employee = await prisma.employee.findMany({
+  //     where:{userId:userId}
+  //   });
+async function main() {
+  
+
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-    const newEmployee = await prisma.employee.create({
+    // Fetch all users to verify
+    const users = await prisma.refreshtoken.findMany({});
+    console.log(users);
+
+    // Create a new refresh token associated with an existing user
+    const newToken = await prisma.refreshtoken.create({
       data: {
-        name,
-        job,
-        email,
-        userId: userId,
+        token: 'sample-refresh-token4', // Replace with the actual token
+        user: {
+          connect: {
+            id: 5, // Replace with the actual user ID
+          },
+        },
       },
     });
-    const employee = await prisma.employee.findMany({
-      where:{userId:userId}
-    });
-    console.log(employee);
-  } catch (error) {
-    console.error('Error fetching employees:', error);
+    const imput = await prisma.refreshtoken.findMany({});
+    console.log(imput);
+  }catch(error)
+  {
+    console.log("mewo", error)
   }
 }
 
