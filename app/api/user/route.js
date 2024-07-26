@@ -1,4 +1,5 @@
-import prisma from '../../lib/prisma';
+
+import prisma from 'prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -28,7 +29,6 @@ export default async function handler(req, res) {
   const accessToken = jwt.sign({ userId: user.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
   const refreshToken = jwt.sign({ userId: user.id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
-  // Save refreshToken to the database or a cache
   await prisma.refreshToken.create({
     data: {
       token: refreshToken,

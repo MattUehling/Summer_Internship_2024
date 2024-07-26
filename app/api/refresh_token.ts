@@ -1,4 +1,4 @@
-import prisma from '../../lib/prisma';
+import prisma from 'prisma';
 import jwt from 'jsonwebtoken';
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;

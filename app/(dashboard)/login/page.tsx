@@ -47,8 +47,8 @@ const LoginForm = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch('/api/user', {
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
