@@ -1,25 +1,40 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../lib/prisma';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const prisma = new PrismaClient();
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
-export async function GET(req, res) {
-  try {
-    const allUsers = await prisma.user.findMany();
-    return new Response(JSON.stringify(allUsers), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    console.error('Error during fetching users:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } finally {
-    await prisma.$disconnect();
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).end();
   }
+
+  const { email, password } = req.body;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid email or password' });
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: 'Invalid email or password' });
+  }
+
+  const accessToken = jwt.sign({ userId: user.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ userId: user.id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+
+  // Save refreshToken to the database or a cache
+  await prisma.refreshToken.create({
+    data: {
+      token: refreshToken,
+      userId: user.id,
+    },
+  });
+
+  res.status(200).json({ accessToken, refreshToken, user: { id: user.id, email: user.email } });
 }

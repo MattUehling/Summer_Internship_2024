@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Table, Group, Text, Select, Button } from '@mantine/core';
 import Link from 'next/link';
 
@@ -10,16 +10,13 @@ const UsersRolesTable = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(true);
-    console.log('Clicked');
-
     const userInfo = JSON.parse(localStorage.getItem("user"));
     if (!userInfo || !userInfo.id) {
       console.log('User ID not found in localStorage');
       alert('User ID not found. Please log in again.');
-      setLoading(false);
       return;
     }
+    setLoading(true);
 
     try {
       const response = await fetch(`/api/employees?userId=${userInfo.id}`, {
@@ -49,6 +46,10 @@ const UsersRolesTable = () => {
     const savedEmployee = JSON.parse(localStorage.getItem("employee"));
     console.log(savedEmployee);
   };
+
+  useEffect(() => {
+    handleSubmit();
+  }, []);
 
   const rows = employees.map((employee) => (
     <tr key={employee.id}>
@@ -93,21 +94,21 @@ const UsersRolesTable = () => {
 
   return (
     <>
-      <Button onClick={handleSubmit}>Load</Button>
+     
       <Table.ScrollContainer minWidth={800}>
-        <Button>Add employee- fix later</Button>
         <Table verticalSpacing="sm">
           <thead>
             <tr>
               <th>Employee</th>
               <th>Title</th>
-              <th>Last Submission</th>
-              <th>Submit</th>
-              <th>TimeSheet</th>
+              <th>Last Submission - modify</th>
+              <th>Submit - modify</th>
+              <th>Time Sheet</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>
         </Table>
+        <Button component={Link} href='addEmployee'>Add employee- fix later</Button>
       </Table.ScrollContainer>
     </>
   );

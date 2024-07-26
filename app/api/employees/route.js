@@ -29,7 +29,6 @@ export async function GET(req, res) {
         name: true,
         job: true,
         email: true,
-        // lastsubmission: true,
       },
     });
 

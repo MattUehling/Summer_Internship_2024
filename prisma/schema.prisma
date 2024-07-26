@@ -16,14 +16,13 @@ model user {
 }
 
 model employee {
-  id             Int         @id @default(autoincrement())
-  userId         Int
-  name           String      @db.VarChar(255)
-  job            String      @db.VarChar(255)
-  email          String      @db.VarChar(255)
-  lastsubmission String     @db.VarChar(255)
-  user           user        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
-  timesheet      timesheet[]
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  name      String      @db.VarChar(255)
+  job       String      @db.VarChar(255)
+  email     String      @db.VarChar(255)
+  user      user        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
+  timesheet timesheet[]
 
   @@index([userId], map: "userId")
 }

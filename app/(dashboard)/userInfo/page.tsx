@@ -41,12 +41,12 @@ export default function UserInfoIcons() {
             </Text>
           </Group>
 
-          <Group wrap="nowrap" gap={10} mt={5}>
+          {/* <Group wrap="nowrap" gap={10} mt={5}>
             <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon} />
             <Text fz="xs" c="dimmed">
               {user.id}
-            </Text>
-          </Group>
+            </Text> */}
+          {/* </Group> */}
         </div>
       </Group>
     </div>

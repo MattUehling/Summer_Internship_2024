@@ -1,8 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Table, Text } from '@mantine/core';
+import { Center, Table, Text } from '@mantine/core';
 import { Line } from 'react-chartjs-2';
 import Link from 'next/link';
+import classes from './Indepth.module.css'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -122,7 +123,7 @@ const IndeptTable = () => {
           <Table.ScrollContainer minWidth={800}>
             <Table verticalSpacing="xs">
               <thead>
-                <tr>
+                <tr className="center-text">
                   <th>Day</th>
                   <th>Date</th>
                   <th>Hours Worked</th>
