@@ -69,12 +69,12 @@ const UsersRolesTable = () => {
       <td>
         <Select
           data={rolesData}
-          defaultValue={employee.job}
+          value={employee.job}
           variant="unstyled"
-          allowDeselect={false}
+          readOnly
         />
       </td>
-      <td>{employee.lastsubmission}</td>
+      <td>{employee.lastSubmission || 'No submission'}</td>
       <td>
         <Button component={Link} href="/dropImages">
           Submit Image
@@ -94,21 +94,20 @@ const UsersRolesTable = () => {
 
   return (
     <>
-     
       <Table.ScrollContainer minWidth={800}>
         <Table verticalSpacing="sm">
           <thead>
             <tr>
               <th>Employee</th>
               <th>Title</th>
-              <th>Last Submission - modify</th>
-              <th>Submit - modify</th>
+              <th>Last Submission</th>
+              <th>Submit</th>
               <th>Time Sheet</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>
         </Table>
-        <Button component={Link} href='addEmployee'>Add employee- fix later</Button>
+        <Button component={Link} href='addEmployee' style={{ marginTop: '20px'}}>Add employee</Button>
       </Table.ScrollContainer>
     </>
   );

@@ -21,9 +21,9 @@ export default function AuthenticationTitle() {
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{" "}
-        <Anchor size="sm" component="button" href="./createAccount">
-          Create account
-        </Anchor>
+        {/* <Anchor size="sm" component="button" Link {./createAccount}> */}
+          {/* Create account
+        </Anchor> */}
       </Text>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <LoginForm />

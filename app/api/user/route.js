@@ -31,17 +31,33 @@ export async function POST(req) {
     console.log('Refresh Token:', refreshToken1);
     const newToken = await prisma.refreshtoken.create({
       data: {
-        token: 'sample-refresh-token4', // Replace with the actual token
+        token: refreshToken1, // Replace with the actual token
         user: {
           connect: {
-            id: 5, // Replace with the actual user ID
+            id: user.id, // Replace with the actual user ID
           },
         },
       },
     });
     console.log('New Token:', newToken);
-
-    return NextResponse.json({ accessToken, refreshToken: refreshToken1, user: { id: user.id, email: user.email } }, { status: 200 });
+    console.log(user)
+    
+    return new Response(
+      JSON.stringify({
+        accessToken,
+        refreshToken: refreshToken1,
+        user: {
+          id: user.id,
+          email: user.email
+        }
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

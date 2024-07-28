@@ -1,26 +1,28 @@
 import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { email, password, name } = req.body;
+export async function POST(req) {
+  if (req.method !== 'POST') {
+    return NextResponse.json({ error: `Method ${req.method} Not Allowed` }, { status: 405, headers: { 'Allow': 'POST' } });
+  }
 
-    try {
-      const newUser = await prisma.user.create({
-        data: {
-          email,
-          password,
-          name,
-        },
-      });
-      res.status(201).json(newUser);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Error creating user', details: error.message });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+  try {
+    const { email, password, name } = await req.json();
+    console.log('email', email, password, name);
+
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        password,
+        name,
+      },
+    });
+
+    return NextResponse.json(newUser, { status: 201 });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Error creating user', details: error.message }, { status: 500 });
   }
 }

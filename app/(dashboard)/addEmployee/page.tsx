@@ -21,6 +21,8 @@ export default function FloatingLabelInput() {
         alert('User ID not found. Please log in again.');
         return;
       }
+      console.log("sup")
+      console.log(userInfo.id)
 
       const response = await fetch('/api/addEmployee', {
         method: 'POST',
@@ -97,9 +99,19 @@ export default function FloatingLabelInput() {
         data-floating={floatingEmail}
         labelProps={{ 'data-floating': floatingEmail }}
       />
-      <button onClick={handleSubmit} disabled={loading}>
-        {loading ? 'Submitting...' : 'Submit'}
-      </button>
+      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', padding: '0 20px' }}>
+        <button 
+          onClick={handleSubmit} 
+          disabled={loading} 
+          style={{ backgroundColor: 'blue', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
+        <button 
+          onClick={() => window.location.href = './employees'} 
+          style={{ backgroundColor: 'blue', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Back
+        </button>
+      </div>
     </>
   );
 }

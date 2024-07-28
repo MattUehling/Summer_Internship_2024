@@ -23,16 +23,32 @@ export async function GET(req, res) {
       select: {
         id: true,
         userId: true,
-        user: true,
-        timesheet: true,
-        _count: true,
         name: true,
         job: true,
         email: true,
+        timesheet: {
+          select: {
+            week: {
+              orderBy: {
+                submissionDate: 'desc',
+              },
+              take: 1,
+              select: {
+                submissionDate: true,
+              },
+            },
+          },
+        },
       },
     });
+    
+    const employeesWithLastSubmission = employees.map(employee => ({
+      ...employee,
+      lastSubmission: employee.timesheet.length > 0 ? employee.timesheet[0].week[0]?.submissionDate || null : null,
+    }));
+    console.log(employeesWithLastSubmission)
 
-    return new Response(JSON.stringify(employees), {
+    return new Response(JSON.stringify(employeesWithLastSubmission), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
