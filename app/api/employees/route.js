@@ -29,10 +29,6 @@ export async function GET(req, res) {
         timesheet: {
           select: {
             week: {
-              orderBy: {
-                submissionDate: 'desc',
-              },
-              take: 1,
               select: {
                 submissionDate: true,
               },
@@ -41,12 +37,11 @@ export async function GET(req, res) {
         },
       },
     });
-    
+
     const employeesWithLastSubmission = employees.map(employee => ({
       ...employee,
       lastSubmission: employee.timesheet.length > 0 ? employee.timesheet[0].week[0]?.submissionDate || null : null,
     }));
-    console.log(employeesWithLastSubmission)
 
     return new Response(JSON.stringify(employeesWithLastSubmission), {
       status: 200,

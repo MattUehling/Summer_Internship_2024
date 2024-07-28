@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Select, TextInput } from '@mantine/core';
+import { Select, TextInput, Button, Group, Center } from '@mantine/core';
 import classes from './FloatingLabelInput.module.css';
 
 export default function FloatingLabelInput() {
@@ -99,19 +99,17 @@ export default function FloatingLabelInput() {
         data-floating={floatingEmail}
         labelProps={{ 'data-floating': floatingEmail }}
       />
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', padding: '0 20px' }}>
-        <button 
+      <Group style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', padding: '10 20px' }}>
+        <Button 
           onClick={handleSubmit} 
-          disabled={loading} 
-          style={{ backgroundColor: 'blue', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          disabled={loading} >
           {loading ? 'Submitting...' : 'Submit'}
-        </button>
-        <button 
-          onClick={() => window.location.href = './employees'} 
-          style={{ backgroundColor: 'blue', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+        </Button>
+        <Button 
+          onClick={() => window.location.href = './employees'}>
           Back
-        </button>
-      </div>
+        </Button>
+      </Group>
     </>
   );
 }

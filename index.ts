@@ -102,38 +102,45 @@ const prisma = new PrismaClient();
 // console.log(employee);
 
 async function main() {
-
-  try {
+  try{
+    // const result = await prisma.week.findMany({});
     const employees = await prisma.employee.findMany({
       where: { userId: 5 },
       include: {
         timesheet: {
           include: {
             week: {
-              orderBy: {
-                submissionDate: 'desc',
-              },
-              take: 1,
               select: {
                 submissionDate: true,
               },
+              orderBy: {
+                submissionDate: 'desc',
+              },
+              take: 1, // Fetch the top 2 results in descending order
             },
           },
         },
       },
     });
+    
+    console.log('Employees:', employees);
+    
+    const result = employees.map((employee: { timesheet: string | any[]; }) => {
+      const secondLastSubmission = employee.timesheet.length > 0 && employee.timesheet[0].week.length > 1
+        ? employee.timesheet[0].week[1].submissionDate.toISOString() // Access the second item if it exists
+        : null;
+        
+      return {
+        ...employee,
+        secondLastSubmission,
+      };
+    });
+    
+    console.log('Result:', result);
+    
+  } catch (error) {
+    console.error('Error:', error);
 
-    const employeesWithLastSubmission = employees.map((employee: { timesheet: string | any[]; }) => ({
-      ...employee,
-      lastSubmission: employee.timesheet.length > 0 ? employee.timesheet[0].week[0]?.submissionDate || null : null,
-    }));
-    console.log(employeesWithLastSubmission)
-    console.log(employees)
-
-
-}catch(error)
-{
-  console.log(error);
 }
 }
 

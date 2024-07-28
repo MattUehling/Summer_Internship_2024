@@ -33,6 +33,7 @@ export async function GET(req, res) {
         },
       },
     });
+    console.log(timesheet)
 
     return new Response(JSON.stringify(timesheet), {
       status: 200,

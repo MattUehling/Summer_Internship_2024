@@ -10,8 +10,8 @@ datasource db {
 model user {
   id           Int            @id @default(autoincrement())
   email        String         @db.VarChar(255)
-  name         String         @db.VarChar(255)
   password     String         @db.VarChar(255)
+  name         String         @db.VarChar(255)
   employee     employee[]
   refreshtoken refreshtoken[]
 }
@@ -19,9 +19,9 @@ model user {
 model employee {
   id        Int         @id @default(autoincrement())
   userId    Int
-  name      String      @db.VarChar(255)
-  job       String      @db.VarChar(255)
   email     String      @db.VarChar(255)
+  job       String      @db.VarChar(255)
+  name      String      @db.VarChar(255)
   user      user        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
   timesheet timesheet[]
 
@@ -30,7 +30,6 @@ model employee {
 
 model week {
   id             Int       @id @default(autoincrement())
-  timesheetId    Int
   monday         Int?
   tuesday        Int?
   wednesday      Int?
@@ -38,10 +37,11 @@ model week {
   friday         Int?
   saturday       Int?
   sunday         Int?
-  startDate      String?   @db.VarChar(255)
   endDate        String?   @db.VarChar(255)
   hoursWorked    Int?
-  submissionDate String?   @db.VarChar(255)
+  startDate      String?   @db.VarChar(255)
+  submissionDate DateTime? @db.DateTime(0)
+  timesheetId    Int
   timesheet      timesheet @relation(fields: [timesheetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "week_ibfk_1")
 
   @@index([timesheetId], map: "timesheetId")
@@ -59,8 +59,8 @@ model timesheet {
 model refreshtoken {
   id         Int       @id @default(autoincrement())
   token      String    @unique(map: "token") @db.VarChar(255)
-  user_id    Int
   created_at DateTime? @default(now()) @db.Timestamp(0)
+  user_id    Int
   user       user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "refreshtoken_ibfk_1")
 
   @@index([user_id], map: "user_id")

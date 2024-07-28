@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { TextInput, rem, Box, Progress, PasswordInput, Group, Text, Center, Button } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons-react';
 import classes from './createAccount.module.css';
 
-function PasswordRequirement({ meets, label }) {
+type PasswordRequirementProps = {
+  meets: boolean;
+  label: string;
+};
+
+function PasswordRequirement({ meets, label }: PasswordRequirementProps) {
   return (
     <Text component="div" color={meets ? 'teal' : 'red'} mt={5} size="sm">
       <Center inline>
@@ -24,7 +29,7 @@ const requirements = [
   { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes special symbol' },
 ];
 
-function getStrength(password) {
+function getStrength(password: string) {
   let multiplier = password.length > 5 ? 0 : 1;
 
   requirements.forEach((requirement) => {
@@ -59,13 +64,13 @@ export default function CreateAccount() {
       />
     ));
 
-  const handleEmailChange = (event) => {
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setEmail(value);
     setEmailError(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? '' : 'Invalid email');
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Submitting user:', { name, email, password });
   
@@ -105,7 +110,7 @@ export default function CreateAccount() {
   
 
   return (
-    <Box maw={400} mx="auto">
+    <Box maw={400} mx="auto" mt={20}>
       <form onSubmit={handleSubmit}>
         <TextInput
           label="Name"
@@ -146,6 +151,10 @@ export default function CreateAccount() {
         {checks}
         <Group position="right" mt="md">
           <Button type="submit">Create Account</Button>
+          <Button 
+          onClick={() => window.location.href = './loginPage'} >
+          Back
+        </Button>
         </Group>
       </form>
     </Box>

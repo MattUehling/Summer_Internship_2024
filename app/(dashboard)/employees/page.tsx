@@ -5,12 +5,21 @@ import Link from 'next/link';
 
 const rolesData = ['CNA', 'Doctor', 'Manager'];
 
+interface Employee {
+  id: string;
+  avatar: string;
+  name: string;
+  email: string;
+  job: string;
+  lastSubmission: string;
+}
+
 const UsersRolesTable = () => {
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const userInfo = JSON.parse(localStorage.getItem("user") || '{}');
     if (!userInfo || !userInfo.id) {
       console.log('User ID not found in localStorage');
       alert('User ID not found. Please log in again.');
@@ -30,7 +39,7 @@ const UsersRolesTable = () => {
         throw new Error('Failed to fetch data');
       }
 
-      const users = await response.json();
+      const users: Employee[] = await response.json();
       console.log(users);
       setEmployees(users);
     } catch (error) {
@@ -41,9 +50,9 @@ const UsersRolesTable = () => {
     }
   };
 
-  const saveInfo = (employee) => {
+  const saveInfo = (employee: Employee) => {
     localStorage.setItem("employee", JSON.stringify(employee));
-    const savedEmployee = JSON.parse(localStorage.getItem("employee"));
+    const savedEmployee = JSON.parse(localStorage.getItem("employee") || '{}');
     console.log(savedEmployee);
   };
 
@@ -107,8 +116,10 @@ const UsersRolesTable = () => {
           </thead>
           <tbody>{rows}</tbody>
         </Table>
-        <Button component={Link} href='addEmployee' style={{ marginTop: '20px'}}>Add employee</Button>
       </Table.ScrollContainer>
+      <Button component={Link} href="addEmployee" style={{ marginTop: '20px' }}>
+        Add employee
+      </Button>
     </>
   );
 };

@@ -1,15 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
-import {
-  TextInput,
-  PasswordInput,
-  Paper,
-  Title,
-  Text,
-  Container,
-  Anchor,
-  Button
-} from "@mantine/core";
+import { TextInput, PasswordInput, Paper, Title, Text, Container, Anchor, Button, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import classes from "./login.module.css";
 
@@ -21,9 +13,9 @@ export default function AuthenticationTitle() {
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{" "}
-        {/* <Anchor size="sm" component="button" Link {./createAccount}> */}
-          {/* Create account
-        </Anchor> */}
+        <Anchor size="sm" component="button" onClick={() => (window.location.href = './createAccount')}>
+          Create account
+        </Anchor>
       </Text>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <LoginForm />
@@ -44,7 +36,7 @@ const LoginForm = () => {
     },
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
       const response = await fetch('/api/user', {
@@ -54,16 +46,16 @@ const LoginForm = () => {
         },
         body: JSON.stringify(values),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to login');
       }
-  
+
       const { accessToken, refreshToken, user } = await response.json();
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('user', JSON.stringify(user));
-  
+
       window.location.href = '/employees';
     } catch (error) {
       console.error(error);
@@ -95,3 +87,5 @@ const LoginForm = () => {
     </form>
   );
 }
+
+// Add Employee Page
