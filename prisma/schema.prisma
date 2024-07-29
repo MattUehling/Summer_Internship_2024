@@ -17,13 +17,14 @@ model user {
 }
 
 model employee {
-  id        Int         @id @default(autoincrement())
-  userId    Int
-  email     String      @db.VarChar(255)
-  job       String      @db.VarChar(255)
-  name      String      @db.VarChar(255)
-  user      user        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
-  timesheet timesheet[]
+  id                 Int                  @id @default(autoincrement())
+  userId             Int
+  email              String               @db.VarChar(255)
+  job                String               @db.VarChar(255)
+  name               String               @db.VarChar(255)
+  bankinginformation bankinginformation[]
+  user               user                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "employee_ibfk_1")
+  timesheet          timesheet[]
 
   @@index([userId], map: "userId")
 }
@@ -40,7 +41,7 @@ model week {
   endDate        String?   @db.VarChar(255)
   hoursWorked    Int?
   startDate      String?   @db.VarChar(255)
-  submissionDate DateTime? @db.DateTime(0)
+  submissionDate String?   @db.VarChar(255)
   timesheetId    Int
   timesheet      timesheet @relation(fields: [timesheetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "week_ibfk_1")
 
@@ -64,4 +65,15 @@ model refreshtoken {
   user       user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "refreshtoken_ibfk_1")
 
   @@index([user_id], map: "user_id")
+}
+
+model bankinginformation {
+  id            Int      @id @default(autoincrement())
+  employeeId    Int
+  accountNumber Int?
+  routingNumber Int?
+  hourlyRate    Int?
+  employee      employee @relation(fields: [employeeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "bankinginformation_ibfk_1")
+
+  @@index([employeeId], map: "employeeId")
 }

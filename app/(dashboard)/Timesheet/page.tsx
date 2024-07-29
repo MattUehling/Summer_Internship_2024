@@ -10,7 +10,7 @@ const TimesheetTable = () => {
   const handleSubmit = async () => {
     const timesheetInfo = JSON.parse(localStorage.getItem("employee"));
     if (!timesheetInfo || !timesheetInfo.id) {
-      console.log('User ID not found in localStorage');
+      console.log('employee ID not found in localStorage');
       alert('User ID not found. Please log in again.');
       return;
     }
@@ -39,7 +39,7 @@ const TimesheetTable = () => {
       setLoading(false);
     }
   };
-  const saveInfo = (week) => {
+  const saveInfo = (week: any) => {
     localStorage.setItem("week", JSON.stringify(week));
     const savedWeek = JSON.parse(localStorage.getItem("week"));
     console.log(savedWeek);
@@ -50,7 +50,7 @@ const TimesheetTable = () => {
   }, []);
 
   const rows = timesheet.flatMap((row, index) =>
-    row.week.map((week, weekIndex) => (
+    row.week.map((week: { startDate: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; endDate: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; hoursWorked: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; submissionDate: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, weekIndex: any) => (
       <tr key={`${index}-${weekIndex}`}>
         <td>{week.startDate}</td>
         <td>{week.endDate}</td>

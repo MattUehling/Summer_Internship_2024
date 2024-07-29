@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Group, Code } from '@mantine/core';
+import { Group, Code, Button } from '@mantine/core';
 import {
   IconBellRinging,
   IconFingerprint,
@@ -15,7 +15,6 @@ import {
 import classes from './Navbar.module.css';
 
 const data = [
-    // <Button component={Link} href = "/dropImages">Image Button</Button>
   { link: '/login', label: 'Home Page', icon: IconBellRinging },
   { link: '/helpPage', label: 'Help Page', icon: IconReceipt2 },
   { link: '/userInfo', label: 'User Info', icon: IconFingerprint },
@@ -40,30 +39,5 @@ export default function NavbarSimpleColored() {
       <span>{item.label}</span>
     </a>
   ));
-
-  return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Group className={classes.header} justify="space-between">
-          {/* <MantineLogo size={28} inverted style={{ color: 'white' }} /> */}
-          <Code fw={700} className={classes.version}>
-            v3.1.2
-          </Code>
-        </Group>
-        {links}
-      </div>
-
-      <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </a>
-      </div>
-    </nav>
-  );
+  <Button onClick={close()}>Log Out</Button>
 }

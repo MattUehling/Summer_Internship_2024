@@ -85,8 +85,8 @@ const UsersRolesTable = () => {
       </td>
       <td>{employee.lastSubmission || 'No submission'}</td>
       <td>
-        <Button component={Link} href="/dropImages">
-          Submit Image
+        <Button onClick={() => saveInfo(employee)} component={Link} href="/paymentSystem">
+          Submit Pay
         </Button>
       </td>
       <td>
@@ -110,7 +110,7 @@ const UsersRolesTable = () => {
               <th>Employee</th>
               <th>Title</th>
               <th>Last Submission</th>
-              <th>Submit</th>
+              <th>Pay</th>
               <th>Time Sheet</th>
             </tr>
           </thead>

@@ -100,42 +100,57 @@ const prisma = new PrismaClient();
 //   where:{userId:userId}
 // });
 // console.log(employee);
+// try{
+//   
+//   const employees = await prisma.employee.findMany({
+//     where: { userId: 5 },
+//     include: {
+//       timesheet: {
+//         include: {
+//           week: {
+//             select: {
+//               submissionDate: true,
+//             },
+//             orderBy: {
+//               submissionDate: 'desc',
+//             },
+//             take: 1, // Fetch the top 2 results in descending order
+//           },
+//         },
+//       },
+//     },
+//   });
+  
+//   console.log('Employees:', employees);
+  
+//   const result = employees.map((employee: { timesheet: string | any[]; }) => {
+//     const secondLastSubmission = employee.timesheet.length > 0 && employee.timesheet[0].week.length > 1
+//       ? employee.timesheet[0].week[1].submissionDate.toISOString() // Access the second item if it exists
+//       : null;
+      
+//     return {
+//       ...employee,
+//       secondLastSubmission,
+//     };
+
+// try{const result = await prisma.bankinginformation.findMany({
+//   where:{employeeId: 5},
+//   select:{
+//     id: true,
+//     employeeId: true,
+//     accountNumber: true,
+//     routingNumber: true,
+//     hourlyRate: true,
+//     employee: true
+//   }
+//  });
 
 async function main() {
   try{
-    // const result = await prisma.week.findMany({});
-    const employees = await prisma.employee.findMany({
-      where: { userId: 5 },
-      include: {
-        timesheet: {
-          include: {
-            week: {
-              select: {
-                submissionDate: true,
-              },
-              orderBy: {
-                submissionDate: 'desc',
-              },
-              take: 1, // Fetch the top 2 results in descending order
-            },
-          },
-        },
-      },
-    });
-    
-    console.log('Employees:', employees);
-    
-    const result = employees.map((employee: { timesheet: string | any[]; }) => {
-      const secondLastSubmission = employee.timesheet.length > 0 && employee.timesheet[0].week.length > 1
-        ? employee.timesheet[0].week[1].submissionDate.toISOString() // Access the second item if it exists
-        : null;
-        
-      return {
-        ...employee,
-        secondLastSubmission,
-      };
-    });
-    
+    const result = await prisma.week.findMany({
+  
+  })
+  
     console.log('Result:', result);
     
   } catch (error) {

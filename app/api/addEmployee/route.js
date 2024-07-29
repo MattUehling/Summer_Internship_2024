@@ -23,7 +23,28 @@ export async function POST(req) {
       },
     });
 
-    return NextResponse.json(newEmployee, { status: 201 });
+    const employeeValue = await prisma.employee.findFirst({
+      where: {
+        name: newEmployee.name,
+      },
+    });
+
+    const bankInfo = await prisma.bankinginformation.findMany({
+      where: { employeeId: employeeValue.id },
+      select: {
+        id: true,
+        employeeId: true,
+        accountNumber: true,
+        routingNumber: true,
+        hourlyRate: true,
+        employee: true,
+      },
+    });
+    console.log(newEmployee);
+    console.log(employeeValue);
+    console.log(bankInfo);
+
+    return NextResponse.json(bankInfo, { status: 201 });
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json({ error: 'Error creating employee', details: error.message }, { status: 500 });
