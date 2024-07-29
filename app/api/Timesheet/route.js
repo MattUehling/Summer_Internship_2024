@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose:  pulls all the timesheets 
+*/
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

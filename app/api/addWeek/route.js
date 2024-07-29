@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: calls on the prisma and creates a timetable that fits the schema, 
+*/
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 

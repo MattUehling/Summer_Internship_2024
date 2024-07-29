@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: Takes in all the employee information and sends it to the api to create a new employee
+*/
 'use client';
 import { useState } from 'react';
 import { Select, TextInput, Button, Group, Center } from '@mantine/core';
@@ -63,7 +66,7 @@ export default function FloatingLabelInput() {
 
   return (
     <>
-      <h1>Create Employee - ADD BANKING INFORMATION SECTION</h1>
+      <h1>Create Employee</h1>
       <p>Name</p>
       <TextInput
         label=""

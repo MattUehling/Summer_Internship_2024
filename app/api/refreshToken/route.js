@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: creates the refresh token because some dude *cough* brad *cough* said it was neccesary 
+*/
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
 import jwt from 'jsonwebtoken';

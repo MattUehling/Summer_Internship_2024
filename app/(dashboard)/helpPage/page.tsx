@@ -1,3 +1,7 @@
+/*Author: Matt Uehling
+* Purpose: Its a help page
+*/
+
 'use client'
 import { Container, Title, Accordion } from '@mantine/core';
 import classes from './Faq.module.css';

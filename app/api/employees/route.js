@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: finds all the employees connected to a user, with an attempted last submission function that doesn't work
+*/
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

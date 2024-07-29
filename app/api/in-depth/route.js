@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: puls the timesheets for a certain week
+*/
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

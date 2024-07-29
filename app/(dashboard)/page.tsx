@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: da home page
+*/
 'use client';
 
 import React from "react";

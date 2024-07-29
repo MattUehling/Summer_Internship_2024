@@ -1,3 +1,7 @@
+/*Author: Matt Uehling
+* Purpose: displays all the employees (called from the api) connect to an account
+* and links to options to pay and see their hours.
+*/
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Avatar, Table, Group, Text, Select, Button } from '@mantine/core';

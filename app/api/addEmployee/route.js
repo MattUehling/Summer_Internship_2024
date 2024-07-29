@@ -1,3 +1,7 @@
+/*Author: Matt Uehling
+* Purpose: uses prisma to create an employee, then finds that newly created employee and creates the banking information
+*/
+
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
 

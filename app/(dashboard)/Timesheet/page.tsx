@@ -1,3 +1,7 @@
+/*Author: Matt Uehling
+* Purpose: calls the api and displays all the hours worked for an employee
+*Links to a more indepth view 
+*/
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Table, Text, Group } from '@mantine/core';

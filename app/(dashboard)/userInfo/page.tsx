@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: displays some user info
+*/
 'use client';
 
 import { useState, useEffect } from 'react';

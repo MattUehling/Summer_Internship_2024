@@ -1,3 +1,8 @@
+/*Author: Matt Uehling
+* Purpose: its the login in page
+* sends the information to the api and returns refresh and access token for security
+*/
+
 "use client";
 
 import React, { useState } from "react";
@@ -87,5 +92,3 @@ const LoginForm = () => {
     </form>
   );
 }
-
-// Add Employee Page

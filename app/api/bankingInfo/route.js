@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: uses prisma and populates the banking information table 
+*/
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

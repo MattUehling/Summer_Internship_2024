@@ -1,3 +1,8 @@
+/*Author: Matt Uehling
+* Purpose: Calls the api to display an employees banking information
+* then offers an automatic file reader(not set up)
+* or manually entering the hours
+*/
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';

@@ -1,3 +1,6 @@
+/*Author: Matt Uehling
+* Purpose: Can see indepth how many hours were worked on a certain day ( called from the api) and a nice graph to see over a week
+*/
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Center, Table, Text } from '@mantine/core';
@@ -74,7 +77,7 @@ const IndeptTable = () => {
     handleSubmit();
   }, []);
 
-  const transformDataToRows = (data) => {
+  const transformDataToRows = (data: any[]) => {
     return data.flatMap((week) => {
       const startDate = new Date(week.startDate);
       const days = [

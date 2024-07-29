@@ -1,3 +1,7 @@
+/*Author: Matt Uehling
+* Purpose: creates a new user using prisma 
+*/
+
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
